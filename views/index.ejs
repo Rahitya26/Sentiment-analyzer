@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentiment Analysis</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="outer-box">
+      <h1>Sentiment Analysis</h1>
+  <textarea id="message"  rows="4" cols="50" placeholder="Enter your message here..." required autofocus></textarea>
+  <br>
+  <button onclick="analyzeSentiment()">Analyze Sentiment</button>
+  <br>
+  <h4>Sentiment: <span id="sentiment">N/A</span></h4>
+  <h4>Score: <span id="score">N/A</span></h4>
+</div>
+
+  <script>
+    async function analyzeSentiment() {
+      const message = document.getElementById('message').value;
+      if (message.trim() === '') {
+        alert("Please enter a message.");
+        return;
+      }
+
+      const response = await fetch('http://localhost:5000/api/sentiment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message })
+      });
+
+      const result = await response.json();
+      document.getElementById('sentiment').innerText = result.sentiment;
+      document.getElementById('score').innerText = result.score;
+    }
+  </script>
+</body>
+</html>
