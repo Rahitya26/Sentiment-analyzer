@@ -13,9 +13,9 @@ app.use(bodyParser.json());
 app.post('/api/sentiment', (req, res) => {
     const message = req.body.message;
 
-    if (!message) {
-        return res.status(400).json({ error: "Message is required" });
-    }
+    // if (!message) {
+    //     return res.status(400).json({ error: "Message is required" });
+    // }
 
     // Perform sentiment analysis using Vader Sentiment
     const sentiment = vader.SentimentIntensityAnalyzer.polarity_scores(message);

@@ -11,19 +11,28 @@
       <h1>Sentiment Analysis</h1>
   <textarea id="message"  rows="4" cols="50" placeholder="Enter your message here..." required autofocus></textarea>
   <br>
-  <button onclick="analyzeSentiment()">Analyze Sentiment</button>
+  <!-- <button onclick="analyzeSentiment()">Analyze Sentiment</button> -->
   <br>
-  <h4>Sentiment: <span id="sentiment">N/A</span></h4>
-  <h4>Score: <span id="score">N/A</span></h4>
+  <h4 class="sidehead">Sentiment: <span id="sentiment"></span></h4>
+  <h4 class="sidehead">Score: <span id="score"></span></h4>
 </div>
 
   <script>
-    async function analyzeSentiment() {
-      const message = document.getElementById('message').value;
-      if (message.trim() === '') {
-        alert("Please enter a message.");
-        return;
+    let ip = document.getElementById("message");
+    ip.addEventListener("input",(e)=>{
+      let txtmsg = e.target.value;
+      if(txtmsg.trim() !== ''){
+        analyzeSentiment(txtmsg);
       }
+      document.getElementById("sentiment").innerText = '';
+      document.getElementById("score").innerText = '';
+    });
+    async function analyzeSentiment(msg) {
+      const message = msg;
+      // if (message.trim() === '') {
+      //   alert("Please enter a message.");
+      //   return;
+      // }
 
       const response = await fetch('http://localhost:5000/api/sentiment', {
         method: 'POST',
