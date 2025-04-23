@@ -20,6 +20,7 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "pg": "^8.14.1",
+    "puppeteer": "^24.7.1",
     "vader-sentiment": "^1.1.3"
   }
 }

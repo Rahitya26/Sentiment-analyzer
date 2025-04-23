@@ -4,47 +4,69 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sentiment Analysis</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="outer-box">
-      <h1>Sentiment Analysis</h1>
-  <textarea id="message"  rows="4" cols="50" placeholder="Enter your message here..." required autofocus></textarea>
+  <h1>Sentiment Analysis</h1>
+
+
+  <h3>Analyze Text</h3>
+  <textarea id="message" rows="4" cols="50" placeholder="Enter your message here..."></textarea>
   <br>
-  <!-- <button onclick="analyzeSentiment()">Analyze Sentiment</button> -->
+  <button onclick="analyzeSentiment()">Analyze Text Sentiment</button>
+  <h3>Analyze Tweet</h3>
+  <input type="text" id="tweetUrl" placeholder="Enter tweet URL here..." style="width: 400px;">
   <br>
-  <h4 class="sidehead">Sentiment: <span id="sentiment"></span></h4>
-  <h4 class="sidehead">Score: <span id="score"></span></h4>
-</div>
+  <button onclick="analyzeTweetSentiment()">Analyze Tweet Sentiment</button>
+
+  <hr>
+  <h3>Sentiment: <span id="sentiment">N/A</span></h3>
+  <h3>Score: <span id="score">N/A</span></h3>
+  <h3 id="tweetText" style="max-width: 600px;"></h3>
 
   <script>
-    let ip = document.getElementById("message");
-    ip.addEventListener("input",(e)=>{
-      let txtmsg = e.target.value;
-      if(txtmsg.trim() !== ''){
-        analyzeSentiment(txtmsg);
+    async function analyzeSentiment() {
+      const message = document.getElementById('message').value.trim();
+      if (!message) {
+        alert("Please enter a message.");
+        return;
       }
-      document.getElementById("sentiment").innerText = '';
-      document.getElementById("score").innerText = '';
-    });
-    async function analyzeSentiment(msg) {
-      const message = msg;
-      // if (message.trim() === '') {
-      //   alert("Please enter a message.");
-      //   return;
-      // }
 
-      const response = await fetch('http://localhost:5000/api/sentiment', {
+      const response = await fetch('http://localhost:3000/api/sentiment', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message })
       });
 
       const result = await response.json();
       document.getElementById('sentiment').innerText = result.sentiment;
       document.getElementById('score').innerText = result.score;
+      document.getElementById('tweetText').innerText = '';
+    }
+
+    async function analyzeTweetSentiment() {
+      const url = document.getElementById('tweetUrl').value.trim();
+      if (!url || !url.includes('x.com')) {
+        alert("Please enter a valid x.com tweet URL.");
+        return;
+      }
+
+      const response = await fetch('http://localhost:3000/api/sentiment/tweet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+
+      const result = await response.json();
+
+      if (result.error) {
+        alert("Error: " + result.error);
+        return;
+      }
+
+      document.getElementById('sentiment').innerText = result.sentiment;
+      document.getElementById('score').innerText = result.score;
+      document.getElementById('tweetText').innerText = "Tweet: " + result.tweet;
     }
   </script>
 </body>
